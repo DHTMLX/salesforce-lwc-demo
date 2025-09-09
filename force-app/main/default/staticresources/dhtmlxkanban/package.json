@@ -1,0 +1,17 @@
+{
+  "name": "@dhx/trial-kanban",
+  "registry": "https://npm.dhtmlx.com",
+  "version": "1.6.5",
+  "type": "module",
+  "main": "dist/kanban.es.js",
+  "module": "dist/kanban.es.js",
+  "types": "dist/kanban.es.d.ts",
+  "license": "SEE LICENSE IN license.txt",
+  "publishConfig": {
+    "registry": "https://npm.dhtmlx.com"
+  },
+  "files": [
+    "dist",
+    "license.txt"
+  ]
+}

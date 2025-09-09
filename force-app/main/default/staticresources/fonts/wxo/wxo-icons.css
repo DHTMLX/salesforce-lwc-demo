@@ -1,0 +1,175 @@
+@font-face {
+    font-family: "wxo-icons";
+    src: url("./fonts/wxo-icons.woff?1faf52b2fb82abce1855b000f7f08a5f") format("woff"),
+url("./fonts/wxo-icons.woff2?1faf52b2fb82abce1855b000f7f08a5f") format("woff2");
+}
+
+i[class^="wxo-"]:before, i[class*=" wxo-"]:before {
+    font-family: wxo-icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.wxo-align-center:before {
+    content: "\f101";
+}
+.wxo-align-image-center:before {
+    content: "\f102";
+}
+.wxo-align-image-left:before {
+    content: "\f103";
+}
+.wxo-align-image-right:before {
+    content: "\f104";
+}
+.wxo-align-justify:before {
+    content: "\f105";
+}
+.wxo-align-left:before {
+    content: "\f106";
+}
+.wxo-align-right:before {
+    content: "\f107";
+}
+.wxo-bold:before {
+    content: "\f108";
+}
+.wxo-clean:before {
+    content: "\f109";
+}
+.wxo-color-background:before {
+    content: "\f10a";
+}
+.wxo-color-text:before {
+    content: "\f10b";
+}
+.wxo-content-copy:before {
+    content: "\f10c";
+}
+.wxo-content-cut:before {
+    content: "\f10d";
+}
+.wxo-content-paste:before {
+    content: "\f10e";
+}
+.wxo-delete:before {
+    content: "\f10f";
+}
+.wxo-document:before {
+    content: "\f110";
+}
+.wxo-edit:before {
+    content: "\f111";
+}
+.wxo-export:before {
+    content: "\f112";
+}
+.wxo-fit-document:before {
+    content: "\f113";
+}
+.wxo-fit-width:before {
+    content: "\f114";
+}
+.wxo-fullscreen-exit:before {
+    content: "\f115";
+}
+.wxo-fullscreen:before {
+    content: "\f116";
+}
+.wxo-heading-1:before {
+    content: "\f117";
+}
+.wxo-heading-2:before {
+    content: "\f118";
+}
+.wxo-heading-3:before {
+    content: "\f119";
+}
+.wxo-heading-4:before {
+    content: "\f11a";
+}
+.wxo-heading-5:before {
+    content: "\f11b";
+}
+.wxo-heading-6:before {
+    content: "\f11c";
+}
+.wxo-help:before {
+    content: "\f11d";
+}
+.wxo-image:before {
+    content: "\f11e";
+}
+.wxo-import:before {
+    content: "\f11f";
+}
+.wxo-indent:before {
+    content: "\f120";
+}
+.wxo-italic:before {
+    content: "\f121";
+}
+.wxo-line-height:before {
+    content: "\f122";
+}
+.wxo-link:before {
+    content: "\f123";
+}
+.wxo-list-bulleted:before {
+    content: "\f124";
+}
+.wxo-list-numbered:before {
+    content: "\f125";
+}
+.wxo-page-break:before {
+    content: "\f126";
+}
+.wxo-paint:before {
+    content: "\f127";
+}
+.wxo-paragraph:before {
+    content: "\f128";
+}
+.wxo-print:before {
+    content: "\f129";
+}
+.wxo-quote:before {
+    content: "\f12a";
+}
+.wxo-redo:before {
+    content: "\f12b";
+}
+.wxo-strike:before {
+    content: "\f12c";
+}
+.wxo-subscript:before {
+    content: "\f12d";
+}
+.wxo-superscript:before {
+    content: "\f12e";
+}
+.wxo-underline:before {
+    content: "\f12f";
+}
+.wxo-undo:before {
+    content: "\f130";
+}
+.wxo-unindent:before {
+    content: "\f131";
+}
+.wxo-unlink:before {
+    content: "\f132";
+}
+.wxo-upload:before {
+    content: "\f133";
+}
+
+
+.wxo-spin {
+    -webkit-animation:fa-spin 2s linear infinite;animation:fa-spin 2s linear infinite
+}

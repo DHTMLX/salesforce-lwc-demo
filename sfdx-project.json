@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "dhtmlx-salesforce-app-",
+  "namespace": "",
+  "sfdcLoginUrl": "https://orgfarm-699063b98a-dev-ed.develop.my.salesforce.com",
+  "sourceApiVersion": "57.0"
+}

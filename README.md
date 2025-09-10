@@ -14,7 +14,7 @@ The sample is implemented with the help of JavaScript libraries from [DHTMLX](ht
 ## Prerequisites
 
 - Read Salesforce docs [Developer Hub](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm) in your organization
-- Apply for Salesforce Dev [trial] (https://www.salesforce.com/form/developer-signup/?d=pb)
+- Apply for Salesforce Dev [trial](https://www.salesforce.com/form/developer-signup/?d=pb)
 - Install the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
 
 ##  Environment Setup

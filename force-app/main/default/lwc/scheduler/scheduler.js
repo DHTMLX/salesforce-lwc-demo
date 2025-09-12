@@ -40,8 +40,8 @@ export default class SchedulerView extends LightningElement {
     this.schedulerInitialized = true;
 
     Promise.all([
-      loadScript(this, SchedulerFiles + "/dhtmlxscheduler.js"),
-      loadStyle(this, SchedulerFiles + "/dhtmlxscheduler.css")
+      loadScript(this, SchedulerFiles + "/codebase/dhtmlxscheduler.js"),
+      loadStyle(this, SchedulerFiles + "/codebase/dhtmlxscheduler.css")
     ])
       .then(() => {
         this.initializeUI();

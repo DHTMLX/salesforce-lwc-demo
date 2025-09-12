@@ -44,7 +44,7 @@ The sample is implemented with the help of JavaScript libraries from [DHTMLX](ht
 
 6. **Deploy Source Code**  
     ```sh
-    sfdx force:source:deploy -p force-app
+    sfdx force:source:deploy -p force-app --target-org dhtmlx
     ```
 
 7. **Set Trusted URLs**  
@@ -65,14 +65,13 @@ To enable file uploads and attachments in the Kanban component, you need to crea
 
 ### Create Content Library
 
-1. **Navigate to Files → Libraries → New Library**
+1. **Go to Files  → Libraries → New Library**.  
+    Note: This option  not in the general settings. The navigation path should resemble:  
+    `https://<your-domain>.lightning.force.com/lightning/o/ContentDocument/home`
 2. **Create New Library:**
    - Name: `KanbanFiles` (recommended)
    - Description: "File storage for Kanban card attachments"
-3. **Configure Library Settings:**
-   - Enable "Allow external access to this library via APIs"
-   - Set appropriate content types (Images, Documents, etc.)
-4. **Set Library Permissions:**
+3. **Set Library Permissions (if needed):**
    - Add all Kanban users as library members
    - Grant "Library Administrator" or "Author" permissions
    - Enable "Upload Content" permission
@@ -241,13 +240,7 @@ Like our page on [Facebook](https://www.facebook.com/dhtmlx/) 👍
 - Go to Profile settings in Salesforce Setup
 - Ensure that Custom Tabs for Gantt, Kanban, and Scheduler are set to "Visible"
 
-### 2. Images are not displaying
-**Problem:** Demo images or icons don't load in the components.
-**Solution:**
-- Verify that `https://snippet.dhtmlx.com` is added to Trusted URLs in your Salesforce org
-- Go to Setup → Security → Remote Site Settings and add the trusted domain
-
-### 3. Images cannot be uploaded in Kanban
+### 2. Images cannot be uploaded in Kanban
 **Problem:** File upload functionality in Kanban doesn't work.
 **Solution:**
 - Ensure Content Library is created and properly configured
@@ -255,18 +248,39 @@ Like our page on [Facebook](https://www.facebook.com/dhtmlx/) 👍
 - Verify that users have proper permissions to upload content to the library
 
 ### 4. No users appear in Kanban user assignments
-**Problem:** The user dropdown in Kanban cards is empty or shows limited users.
+**Problem:** The Kanban card user dropdown is empty or only shows a few users.
 **Solution:**
-- By default, the demo uses specific hardcoded user IDs that likely don't exist in your org
-- In `KanbanData.cls`, find the `getUsers()` method around line 109-116
-- Comment out the demo user filtering code and uncomment the lines that retrieve all active users:
-  ```apex
-  // Comment out the demo users section and use this instead:
-  List<User> us = [
-      SELECT Id, Name, SmallPhotoUrl
-      FROM   User
-      WHERE  IsActive = true
-      ORDER  BY Name
-  ];
-  ```
-- **Warning:** This may return many users and impact performance in large organizations
+- The demo uses hardcoded user IDs that may not exist in your Salesforce org.
+- Open `KanbanData.cls` and locate the `getUsers()` method (around lines 109–116).
+- Disable the demo user filtering by commenting out the code that restricts users to specific IDs:
+
+    Comment out:
+    ```apex
+    // Set<Id> allowed = new Set<Id>{
+    //     '005gL000004asAsQAI', // 'Steve Smith'
+    //     '005gL000004ayJVQAY', // 'Angela Allen'
+    //     '005gL000004ayjJQAQ', // 'Aron Long'
+    //     '005gL000004ayplQAA', // 'Angela Long'
+    //     '005gL000004qjErQAI' // DHTMLX USER
+    // };
+
+    // List<User> us = [
+    //     SELECT Id, Name, SmallPhotoUrl
+    //     FROM   User
+    //     WHERE  Id IN :allowed
+    //     AND    IsActive = true
+    //     ORDER  BY Name
+    // ];
+    ```
+
+- Instead, uncomment the code that retrieves all active users:
+    ```apex
+    List<User> us = [
+        SELECT Id, Name, SmallPhotoUrl
+        FROM   User
+        WHERE  IsActive = true
+        ORDER  BY Name
+    ];
+    ```
+- This will display all active users in your organization in the Kanban user assignment dropdown.
+- **Warning:** In large organizations, this may list many users.

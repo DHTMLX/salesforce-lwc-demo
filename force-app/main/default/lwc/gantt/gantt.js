@@ -47,8 +47,8 @@ export default class GanttView extends LightningElement {
     this.ganttInitialized = true;
 
     Promise.all([
-      loadScript(this, GanttFiles + "/dhtmlxgantt.js"),
-      loadStyle(this, GanttFiles + "/dhtmlxgantt.css")
+      loadScript(this, GanttFiles + "/codebase/dhtmlxgantt.js"),
+      loadStyle(this, GanttFiles + "/codebase/dhtmlxgantt.css")
     ])
       .then(() => {
         this.initializeUI();

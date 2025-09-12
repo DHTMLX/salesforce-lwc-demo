@@ -259,20 +259,20 @@ function getData() {
 	const links = [
 		{
 			id: 1,
-			masterId: 1,
-			slaveId: 3,
+			source: 1,
+			target: 3,
 			relation: "parent",
 		},
 		{
 			id: 3,
-			masterId: 1,
-			slaveId: 3,
+			source: 1,
+			target: 3,
 			relation: "duplicate",
 		},
 		{
 			id: 4,
-			masterId: 2,
-			slaveId: 1,
+			source: 2,
+			target: 1,
 			relation: "relatesTo",
 		},
 	];

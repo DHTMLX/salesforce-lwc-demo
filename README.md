@@ -39,7 +39,7 @@ The sample is implemented with the help of JavaScript libraries from [DHTMLX](ht
 
 5. **Create a Scratch Org**  
     ```sh
-    sfdx org create scratch -f config/project-scratch-def.json
+    sfdx org create scratch -f config/project-scratch-def.json --target-org dhtmlx
     ```
 
 6. **Deploy Source Code**  

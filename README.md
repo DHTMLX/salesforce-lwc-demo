@@ -32,27 +32,31 @@ The sample is implemented with the help of JavaScript libraries from [DHTMLX](ht
 
 4. **Authenticate with Salesforce CLI**  
     ```sh
-    sfdx auth:web:login -d -a dhtmlx
+    sfdx auth:web:login -d
     ```
     - Use any alias (e.g., `dhtmlx`).
     - You can find your username in Salesforce under **Users**.
 
 5. **Create a Scratch Org**  
     ```sh
-    sfdx org create scratch -f config/project-scratch-def.json --target-org dhtmlx
+    sfdx org create scratch -f config/project-scratch-def.json -a dhtmlx
     ```
 
 6. **Deploy Source Code**  
     ```sh
     sfdx force:source:deploy -p force-app --target-org dhtmlx
     ```
+7. **Open Scratch Org**
+     ```sh
+    sfdx force:org:open -u dhtmlx
+    ```
 
-7. **Set Trusted URLs**  
+8. **Set Trusted URLs**  
     - If your code uses images, add their URLs to **Trusted URLs** in Salesforce settings.
     - For demo images and attachments, this project uses [https://snippet.dhtmlx.com](https://snippet.dhtmlx.com) as an external image host.  
       Make sure to add `https://snippet.dhtmlx.com` to the list of Trusted URLs in your Salesforce org.
 
-8. **Configure Profile Tab Visibility**
+9. **Configure Profile Tab Visibility**
     - Go to **Setup** → **Users** → **Profiles**
     - Find and edit your user profile (e.g., "System Administrator")
     - In **Custom App Settings** section, locate the DHTMLX components

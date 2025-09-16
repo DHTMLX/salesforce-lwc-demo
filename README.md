@@ -28,7 +28,8 @@ The sample is implemented with the help of JavaScript libraries from [DHTMLX](ht
 3. **Configure My Domain**  
     - In **Quick Find**, search for `My Domain`.
     - Copy your domain (e.g., `orgfarm-699063b98a-dev-ed.develop.my.salesforce.com`).
-    - Paste it into your `sfdx-project.json`.
+    - Insert this value into the `sfdcLoginUrl` field of your `sfdx-project.json`.
+    - The URL should be in the format `https://{your_domain}`
 
 4. **Authenticate with Salesforce CLI**  
     ```sh

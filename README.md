@@ -59,7 +59,7 @@ The sample is implemented with the help of JavaScript libraries from [DHTMLX](ht
 9. **Configure Profile Tab Visibility**
     - Go to **Setup** → **Users** → **Profiles**
     - Find and edit your user profile (e.g., "System Administrator")
-    - In **Custom App Settings** section, locate the DHTMLX components
+    - In **Custom Tab Settings** section, locate the DHTMLX components
     - Set **Tab Settings** for Gantt, Kanban, and Scheduler tabs to **Default On** or **Visible**
     - Save the profile changes
 

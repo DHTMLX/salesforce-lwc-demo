@@ -253,11 +253,19 @@ global with sharing class DefaultDataReset implements Schedulable {
         Integer p = 0; for (KanbanCard__c c : cards) demo2real.put(idx2demo.get(p++), c.Id);
 
         /* 6. votes, comments, links */
-        Id me = (Id)'005gL000004ayjJQAQ'; // 'Aron Long'
-
-        Id otherUser = (Id)'005gL000004asAsQAI'; // Steve Smith
-
-        Id thirdUser = (Id)'005gL000004ayJVQAY'; // 005gL000004ayJVQAY
+        // for prod demo
+        // Id me = (Id)'005gL000004ayjJQAQ'; // 'Aron Long'
+        // Id otherUser = (Id)'005gL000004asAsQAI'; // Steve Smith
+        // Id thirdUser = (Id)'005gL000004ayJVQAY'; // 005gL000004ayJVQAY
+       
+        List<User> demoUsers = [SELECT Id, Name FROM User WHERE IsActive = true LIMIT 3];
+        if (demoUsers.size() < 3) {
+            throw new AuraHandledException('Not enough active users in the org to populate Kanban demo.');
+        }
+        Id me        = demoUsers[0].Id;
+        Id otherUser = demoUsers[1].Id;
+        Id thirdUser = demoUsers[2].Id;
+       
         /* 7. assignees */ 
         Map<Integer,List<Id>> assignees = new Map<Integer,List<Id>>{
             1  => new List<Id>{thirdUser,          otherUser},   // [3,2]

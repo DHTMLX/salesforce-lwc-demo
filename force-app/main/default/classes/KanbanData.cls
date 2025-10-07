@@ -89,31 +89,33 @@ public with sharing class KanbanData {
     @AuraEnabled(cacheable=true)
     public static List<UserDTO> getUsers() {
         /* ——— allowed user Ids ——— */
-        Set<Id> allowed = new Set<Id>{
-            '005gL000004asAsQAI', // 'Steve Smith'
-            '005gL000004ayJVQAY', // 'Angela Allen'
-            '005gL000004ayjJQAQ', // 'Aron Long'
-            '005gL000004ayplQAA', // 'Angela Long'
-            '005gL000004qjErQAI' // DHTMLX USER
-        };
+        // Comment out this
+        // Set<Id> allowed = new Set<Id>{
+        //     '005gL000004asAsQAI', // 'Steve Smith'
+        //     '005gL000004ayJVQAY', // 'Angela Allen'
+        //     '005gL000004ayjJQAQ', // 'Aron Long'
+        //     '005gL000004ayplQAA', // 'Angela Long'
+        //     '005gL000004qjErQAI' // DHTMLX USER
+        // };
 
-        List<User> us = [
-            SELECT Id, Name, SmallPhotoUrl
-            FROM   User
-            WHERE  Id IN :allowed
-            AND    IsActive = true
-            ORDER  BY Name
-        ];
+        // Comment out this
+        // List<User> us = [
+        //     SELECT Id, Name, SmallPhotoUrl
+        //     FROM   User
+        //     WHERE  Id IN :allowed
+        //     AND    IsActive = true
+        //     ORDER  BY Name
+        // ];
 
         
         // Uncomment the following lines to retrieve all active users from your org.
         // WARNING: This may return a large number of users and impact performance.
-        // List<User> us = [
-        //     SELECT Id, Name, SmallPhotoUrl
-        //     FROM   User
-        //     WHERE  IsActive = true
-        //     ORDER  BY Name
-        // ];
+        List<User> us = [
+            SELECT Id, Name, SmallPhotoUrl
+            FROM   User
+            WHERE  IsActive = true
+            ORDER  BY Name
+        ];
         
 
         List<UserDTO> result = new List<UserDTO>();

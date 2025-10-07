@@ -2,12 +2,12 @@ declare namespace kanban{
 type TDataBlock = {
     in: string[];
     out: string[];
-    exec: any;
+    exec: (ctx: TDataConfig) => void;
     length?: number;
 };
 type TDataConfig = TDataBlock[];
 type TID$1 = number | string;
-interface IEventConfig$1 {
+interface IEventConfig$2 {
     intercept?: boolean;
     tag?: number | string | symbol;
 }
@@ -15,23 +15,23 @@ interface DataHash {
     [key: string]: any;
 }
 interface IWritable<T> {
-    subscribe: (fn: (v: T) => any) => any;
-    update: (fn: (v: T) => any) => any;
-    set: (val: T) => any;
+    subscribe: (fn: (v: T) => void) => void;
+    update: (fn: (v: T) => T) => void;
+    set: (val: T) => void;
 }
-type TTrigger<T> = (v: T) => any;
+type TTrigger<T> = (v: T) => void;
 type SomeCallback = () => void;
 type TAsyncSignals = {
     [key: string]: SomeCallback | null;
 };
 interface IPublicWritable<T> {
-    subscribe: (fn: TTrigger<T>) => any;
+    subscribe: (fn: TTrigger<T>) => void;
     __trigger(): void;
     __parse: (val: T, key: string, signals: TAsyncSignals, mode: TStateMode) => void;
 }
 type TWritableCreator = (val: any) => IWritable<typeof val>;
 interface IEventBus$1<T> {
-    exec(name: string, ev: T[keyof T]): Promise<T[keyof T]>;
+    exec(name: keyof T, ev: T[keyof T]): Promise<T[keyof T]>;
     setNext(next: IEventBus$1<T>): IEventBus$1<T>;
 }
 type TStateMode = number;
@@ -43,8 +43,8 @@ class EventBus$1<T, A extends keyof T> {
         (v: T[A]): void | boolean | Promise<boolean>;
     }, number | string | symbol>;
     constructor();
-    on(name: A, handler: (v: T[A]) => void | boolean | Promise<boolean>, config?: IEventConfig$1): void;
-    intercept(name: A, handler: (v: T[A]) => void | boolean | Promise<boolean>, config?: IEventConfig$1): void;
+    on(name: A, handler: (v: T[A]) => void | boolean | Promise<boolean>, config?: IEventConfig$2): void;
+    intercept(name: A, handler: (v: T[A]) => void | boolean | Promise<boolean>, config?: IEventConfig$2): void;
     detach(tag: number | string | symbol): void;
     exec(name: A, ev: T[A]): Promise<T[A]>;
     setNext(next: IEventBus$1<T>): IEventBus$1<T>;
@@ -53,12 +53,16 @@ class EventBus$1<T, A extends keyof T> {
 type TState<Type> = {
     [Property in keyof Type]: IPublicWritable<Type[Property]>;
 };
+type StoreConfig = {
+    writable: TWritableCreator;
+    async: boolean;
+};
 class Store<T extends DataHash> {
     private _state;
     private _values;
     private _writable;
     private _async;
-    constructor(config: any);
+    constructor(config: StoreConfig);
     setState(data: Partial<T>, mode?: TStateMode | TDataConfig): TAsyncSignals;
     getState(): T;
     getReactive(): TState<T>;
@@ -67,8 +71,6 @@ class Store<T extends DataHash> {
     private _wrapWritable;
 }
 
-function tempID(): string;
-
 class ExportManager {
     private _store;
     constructor(store: DataStore);
@@ -76,6 +78,10 @@ class ExportManager {
     private _save;
 }
 
+interface IEventConfig$1 {
+    intercept?: boolean;
+    tag?: number | string | symbol;
+}
 interface IMoveCardConfig {
     columnId: TID$1;
     rowId?: TID$1 | null;
@@ -85,24 +91,6 @@ interface IMoveCardConfig {
 type THandlersFunction = {
     [Key in keyof THandlersConfig]: (store: DataStore, config?: THandlersConfig[Key]) => any;
 };
-interface ICoords {
-    x: number;
-    y: number;
-}
-interface IRect extends ICoords {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-    width: number;
-    height: number;
-    id?: TID$1;
-    scrollList?: IScrollColumn;
-}
-interface IScrollColumn {
-    node: HTMLElement;
-    initialScrollY: number;
-}
 interface IUser {
     id: TID$1;
     label?: string;
@@ -195,8 +183,6 @@ interface IKanbanProps {
     rowShape?: IRowShape;
     editorShape?: TEditorShape[];
     editor?: IKanbanEditorConfig;
-    /** @deprecated use editor.autoSave instead */
-    editorAutoSave?: boolean;
     cardTemplate?: any;
     readonly?: TReadonlyConfig;
     columnKey?: string;
@@ -210,37 +196,61 @@ interface IKanbanProps {
     history?: boolean;
     dataStore?: DataStore;
 }
+interface IData {
+    columns: IColumn[];
+    columnKey: string;
+    rows: IRow[];
+    rowKey?: string;
+    cards: INormalizedCard[];
+    cardShape: ICardShape;
+    editorShape?: TEditorShape[];
+    columnShape?: IColumnShape;
+    rowShape?: IRowShape;
+    links: ILink[];
+    readonly?: IReadonlyModes | null;
+    cardHeight?: number | null;
+    editor?: IKanbanEditorConfig;
+    currentUser?: TID$1 | null;
+    scrollType?: TScrollType;
+    renderType?: TRenderType;
+    history: IHistory;
+    sort?: IAreaSortConfig | ISortConfig | null;
+    search: ISearchConfig | null;
+    selected?: TID$1[] | null;
+    _areasMeta: TAreasMeta;
+    _cardsMeta: Record<TID$1, ICardMeta | undefined>;
+    _cardsMap: TCardsMap;
+    _scroll?: IScrollConfig | null;
+    _edit?: IEditConfig | null;
+    _layout: TLayoutType;
+}
 interface IDataStoreState {
     columns: IColumn[];
     columnKey: string;
     rows: IRow[];
     rowKey?: string;
     cards: INormalizedCard[];
-    cardsMap: TCardsMap;
-    areasMeta: TAreasMeta;
     cardShape: ICardShape;
     editorShape?: TEditorShape[];
     columnShape?: IColumnShape;
     rowShape?: IRowShape;
-    cardsMeta: Record<TID$1, ICardMeta | undefined>;
     links: ILink[];
-    dragItemId: TID$1 | null;
-    before: TID$1 | null;
-    overAreaId?: TID$1 | null;
-    dragItemsCoords: TDragItemsCoords | null;
-    search: ISearchConfig | null;
-    selected?: TID$1[] | null;
-    scroll?: IScrollConfig | null;
-    sort?: IAreaSortConfig | ISortConfig | null;
-    edit?: IEditConfig | null;
     readonly?: IReadonlyModes | null;
     cardHeight?: number | null;
-    layout: TLayoutType;
-    history: IHistory;
     editor?: IKanbanEditorConfig;
     currentUser?: TID$1 | null;
     scrollType?: TScrollType;
     renderType?: TRenderType;
+    history: IHistory;
+    sort?: IAreaSortConfig | ISortConfig | null;
+    search: ISearchConfig | null;
+    selected?: TID$1[] | null;
+    _areasMeta: TAreasMeta;
+    _cardsMeta: Record<TID$1, ICardMeta | undefined>;
+    _cardsMap: TCardsMap;
+    _scroll?: IScrollConfig | null;
+    _edit?: IEditConfig | null;
+    _layout: TLayoutType;
 }
 interface IHistoryConfig {
     ev: THandlersConfig[keyof THandlersConfig];
@@ -267,14 +277,10 @@ interface ISortConfig {
     preserve?: boolean;
 }
 interface ISortItemOption extends ISortConfig {
-    /** @deprecated use text instead */
-    label?: string;
     text: string;
     id?: TID$1;
     icon?: TWxIcons;
 }
-type TDropAreasCoords = IRect[];
-type TDragItemsCoords = Record<string, IRect>;
 type TSearchRule = (card: INormalizedCard, value: string, by?: string) => boolean;
 interface ISearchConfig {
     value: string | null;
@@ -284,12 +290,8 @@ interface ISearchConfig {
 interface IMenuItem {
     id: string;
     icon?: TWxIcons;
-    /** @deprecated use text instead */
-    label?: string;
-    text?: string;
+    text: string;
     disabled?: boolean;
-    /** @deprecated use data instead */
-    items?: IMenuItem[];
     data?: IMenuItem[];
 }
 type TMenuItemsFn<T> = (config: T) => IMenuItem[] | null;
@@ -300,20 +302,24 @@ interface ICardField {
 }
 interface IComment {
     id: TID$1;
-    userId: TID$1;
+    userId?: TID$1;
     cardId: TID$1;
     text: string;
     html?: string;
     date: Date;
 }
 interface ILink {
-    id: TID$1;
-    masterId: TID$1;
-    slaveId: TID$1;
+    id?: TID$1;
+    /** @deprecated use source instead */
+    masterId?: TID$1;
+    source: TID$1;
+    /** @deprecated use target instead */
+    slaveId?: TID$1;
+    target: TID$1;
     relation: TRelationOptions;
 }
 interface ICardShape {
-    label: ICardField;
+    label?: ICardField;
     description?: ICardField;
     progress?: ICardField;
     start_date?: ICardField & {
@@ -465,7 +471,7 @@ type TComboFieldShape = TCommonShape & {
         label?: string;
     }[];
     config?: {
-        clearButton?: boolean;
+        clear?: boolean;
         disabled?: boolean;
         error?: boolean;
         placeholder?: string;
@@ -571,8 +577,9 @@ interface IReadonlyModes {
 type TReadonlyConfig = IReadonlyModes | boolean;
 interface IApi {
     exec: (action: keyof THandlersConfig, params: any) => Promise<any>;
-    on: (action: keyof THandlersConfig, callback: (config: any) => any) => void;
-    intercept: (action: keyof THandlersConfig, callback: (config: any) => any) => void;
+    on: (action: keyof THandlersConfig, callback: (config: any) => any, config?: IEventConfig$1) => void;
+    intercept: (action: keyof THandlersConfig, callback: (config: any) => any, config?: IEventConfig$1) => void;
+    detach: (tag: number | string | symbol) => void;
     getState: () => IDataStoreState;
     getReactiveState: () => {
         [Key in keyof IDataStoreState]: IPublicWritable<IDataStoreState[Key]>;
@@ -583,6 +590,7 @@ interface IApi {
     };
     getCard: (id: TID$1) => ICard | undefined;
     getAreaCards: (columnId: TID$1, rowId?: TID$1) => ICard[] | undefined;
+    getColumnCards: (columnId: TID$1) => ICard[] | undefined;
     serialize: () => {
         cards: ICard[];
         links: ILink[];
@@ -590,8 +598,6 @@ interface IApi {
         rows?: IRow[] | null;
     };
     export: ExportManager;
-    undo: () => void;
-    redo: () => void;
 }
 interface ISearchOption {
     id: string | null;
@@ -622,14 +628,14 @@ type IToolbarItem = IToolbarDefaultItem | ISearchItem | ISortItem | ITemplateIte
 type TWxIcons = "wxi-alert" | "wxi-angle-dbl-down" | "wxi-angle-dbl-left" | "wxi-angle-dbl-right" | "wxi-angle-dbl-up" | "wxi-angle-down" | "wxi-angle-left" | "wxi-angle-right" | "wxi-angle-up" | "wxi-arrow-down" | "wxi-arrow-left" | "wxi-arrow-right" | "wxi-arrow-up" | "wxi-arrows-h" | "wxi-arrows-v" | "wxi-asc" | "wxi-assign" | "wxi-bullhorn" | "wxi-calendar" | "wxi-camera" | "wxi-cat" | "wxi-check" | "wxi-clock" | "wxi-close" | "wxi-content-copy" | "wxi-content-cut" | "wxi-content-paste" | "wxi-convert" | "wxi-delete-outline" | "wxi-delete" | "wxi-desc" | "wxi-dots-h" | "wxi-dots-v" | "wxi-download" | "wxi-duplicate" | "wxi-earth" | "wxi-edit" | "wxi-edit-outline" | "wxi-emoticon-outline" | "wxi-empty" | "wxi-external" | "wxi-eye" | "wxi-file" | "wxi-filter-check" | "wxi-filter-outline" | "wxi-folder" | "wxi-food-fork-drink" | "wxi-human-handsdown" | "wxi-indent" | "wxi-information-outline" | "wxi-loading" | "wxi-menu-down" | "wxi-menu-right" | "wxi-paperclip" | "wxi-paste" | "wxi-pin-outline" | "wxi-plus" | "wxi-pound" | "wxi-redo" | "wxi-refresh" | "wxi-rename" | "wxi-search" | "wxi-soccer" | "wxi-sort" | "wxi-split" | "wxi-star-outline" | "wxi-subtask" | "wxi-table-column-plus-after" | "wxi-table-row-plus-after" | "wxi-table-row-plus-before" | "wxi-undo" | "wxi-unindent" | "wxi-upload" | "wxi-view-column" | "wxi-view-grid" | "wxi-view-sequential";
 type TRelationOptions = "relatesTo" | "requiredFor" | "duplicate" | "parent";
 
-class DataStore extends Store<IDataStoreState> {
+class DataStore extends Store<IData> {
     in: EventBus$1<THandlersConfig, keyof THandlersConfig>;
     out: EventBus$1<THandlersConfig, keyof THandlersConfig>;
     sortRule?: (config: ISortConfig) => (a: ICard, b: ICard) => number;
     config: IStoreConfig;
     private _router;
     constructor(w: TWritableCreator, config?: IStoreConfig);
-    setState(state: Partial<IDataStoreState>, ctx?: any): TAsyncSignals;
+    setState(state: Partial<IData>, ctx?: TDataConfig): TAsyncSignals;
     init(state: Partial<Omit<IDataStoreState, "cards" | "readonly" | "cardShape" | "columnShape" | "rowShape">> & {
         cards: ICard[];
         readonly: TReadonlyConfig;
@@ -640,6 +646,7 @@ class DataStore extends Store<IDataStoreState> {
     undo(): void;
     redo(): void;
     protected _setHandlers(handlersMap: THandlersFunction): void;
+    protected _getHandlers(): THandlersFunction;
     protected _initStructure(): void;
     private _computeLimits;
     private _normalizeCards;
@@ -710,8 +717,6 @@ type THandlersConfig = CombineTypes<{
         columnId: TID$1;
         before?: TID$1 | null;
         source: TID$1[];
-        dragItemsCoords: IDataStoreState["dragItemsCoords"] /** @deprecated will be removed in later versions */;
-        dropAreasCoords: TDropAreasCoords | null /** @deprecated will be removed in later versions */;
     };
     ["drag-card"]: {
         id: TID$1;
@@ -719,6 +724,7 @@ type THandlersConfig = CombineTypes<{
         columnId?: TID$1 | null;
         before?: TID$1 | null;
         source: TID$1[];
+        dragAllowed?: boolean;
     };
     ["end-drag-card"]: {
         id: TID$1;
@@ -745,12 +751,12 @@ type THandlersConfig = CombineTypes<{
     ["add-comment"]: {
         id?: TID$1;
         cardId: TID$1;
-        comment: Partial<Omit<IComment, "userId">>;
+        comment: Partial<IComment>;
     };
     ["update-comment"]: {
         id: TID$1;
         cardId: TID$1;
-        comment: Partial<Omit<IComment, "userId">>;
+        comment: Partial<IComment>;
     };
     ["delete-comment"]: {
         id: TID$1;
@@ -765,10 +771,14 @@ type THandlersConfig = CombineTypes<{
     };
     ["add-vote"]: {
         cardId: TID$1;
+        userId?: TID$1;
     };
     ["delete-vote"]: {
         cardId: TID$1;
+        userId?: TID$1;
     };
+    ["undo"]: null;
+    ["redo"]: null;
 }, {
     $meta?: {
         skipHistory?: boolean;
@@ -780,8 +790,8 @@ type THandlersConfig = CombineTypes<{
 const defaultCardShape: ICardShape;
 const defaultEditorShape: TEditorShape[];
 const defaultEditorConfig: IKanbanEditorConfig;
-const getDefaultCardMenuItems: ({ store }: {
-    store: DataStore;
+const getDefaultCardMenuItems: (config: {
+    readonly: IReadonlyModes;
 }) => {
     id: string;
     icon: string;
@@ -790,7 +800,6 @@ const getDefaultCardMenuItems: ({ store }: {
 const getDefaultColumnMenuItems: ({ columns, columnIndex, }: {
     columns: IColumn[];
     columnIndex: number;
-    store?: DataStore;
 }) => ({
     id: string;
     icon: string;
@@ -805,7 +814,6 @@ const getDefaultColumnMenuItems: ({ columns, columnIndex, }: {
 const getDefaultRowMenuItems: ({ rows, rowIndex, }: {
     rows: IRow[];
     rowIndex: number;
-    store?: DataStore;
 }) => ({
     id: string;
     icon: string;
@@ -820,12 +828,15 @@ const getDefaultRowMenuItems: ({ rows, rowIndex, }: {
 
 function locateID(el: Element | Event, attr?: string): string | number;
 
-class Events {
-    private _api;
-    constructor(api: IApi);
-    on<K extends keyof THandlersConfig>(event: K, callback: (config: THandlersConfig[K]) => any): void;
-    exec<K extends keyof THandlersConfig>(event: K, data: THandlersConfig[K]): void;
+interface Env {
+    detect: () => boolean;
+    addEvent: (node: HTMLElement, event: string, handler: EventListenerOrEventListenerObject) => RemoveEventListener;
+    addGlobalEvent: (event: string, handler: EventListenerOrEventListenerObject, rel: HTMLElement) => RemoveEventListener;
+    getTopNode: (rel: HTMLElement) => HTMLElement;
 }
+type RemoveEventListener = () => void;
+
+const salesForceEnv: Partial<Env>;
 
 type TThemeConfig = {
     name: string;
@@ -838,7 +849,6 @@ interface IKanbanConfig extends IKanbanProps {
 class Kanban {
     api: IApi;
     export: ExportManager;
-    events: Events;
     config: IKanbanConfig;
     container: HTMLElement;
     private _kanban;
@@ -857,11 +867,12 @@ class Kanban {
         columns: IColumn[];
         rows: IRow[];
     };
-    undo(): void;
-    redo(): void;
     getCard(id: TID$1): ICard;
     getAreaCards(columnId: TID$1, rowId?: TID$1): ICard[];
+    getColumnCards(columnId: TID$1): ICard[];
     getSelection(): TID$1[];
+    undo(): void;
+    redo(): void;
     addCard(config: THandlersConfig["add-card"]): void;
     updateCard(config: THandlersConfig["update-card"]): void;
     duplicateCard(config: THandlersConfig["duplicate-card"]): void;
@@ -891,9 +902,12 @@ class Kanban {
     private _init;
     private _reset;
     private _storeConfig;
-    private _configToProps;
 }
-function template(template: any): (template: string | ((...x: any[]) => string)) => void;
+function template(template: any): {
+    (template: string | {
+        (...x: any[]): string;
+    }): void;
+};
 
 interface IEditorProps {
     api: IApi;
@@ -906,7 +920,6 @@ class Editor {
     api: IApi;
     config: IEditorProps;
     container: HTMLElement;
-    events: Events;
     private _component;
     constructor(container: HTMLElement, config: IEditorProps);
     destructor(): void;
@@ -925,7 +938,6 @@ interface IToolbarConfig {
 }
 class Toolbar {
     api: IApi;
-    events: Events;
     config: IToolbarConfig;
     container: HTMLElement;
     private _toolbar;
@@ -939,6 +951,8 @@ class Toolbar {
     private _configToProps;
     private _normalizeItems;
 }
+
+function tempID(): string;
 
 interface IEventConfig {
     intercept?: boolean;
@@ -1057,8 +1071,8 @@ class RestDataProvider extends Rest<THandlersConfig> {
         label?: string;
         description?: string;
         progress?: number;
-        end_date?: string | Date;
-        start_date?: string | Date;
+        end_date?: Date | string;
+        start_date?: Date | string;
         color?: string;
         priority?: any;
         attached?: IAttachment[];
@@ -1073,6 +1087,8 @@ function kanbanUpdates(api: any, resolver: any): {
     columns: (obj: any) => void;
     rows: (obj: any) => void;
     links: (obj: any) => void;
+    comments: (obj: any) => void;
+    votes: (obj: any) => void;
 };
 
 class RemoteEvents {
@@ -1083,5 +1099,18 @@ class RemoteEvents {
     protected on(name: string | any, handler?: any): void;
 }
 
-export { Editor, Kanban, RemoteEvents, RestDataProvider, Toolbar, defaultCardShape, defaultEditorConfig, defaultEditorShape, getDefaultCardMenuItems, getDefaultColumnMenuItems, getDefaultRowMenuItems, kanbanUpdates, locateID, tempID, template };
+const locales: {
+    en: any;
+    de: any;
+    cn: any;
+    es: any;
+    fr: any;
+    it: any;
+    jp: any;
+    pt: any;
+    ru: any;
+};
+function enableSalesForce(): void;
+
+export { Editor, Kanban, RemoteEvents, RestDataProvider, Toolbar, defaultCardShape, defaultEditorConfig, defaultEditorShape, enableSalesForce, getDefaultCardMenuItems, getDefaultColumnMenuItems, getDefaultRowMenuItems, kanbanUpdates, locales, locateID, salesForceEnv, tempID, template };
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@dhx/trial-kanban",
+  "name": "@dhx/kanban",
   "registry": "https://npm.dhtmlx.com",
   "version": "1.6.5",
   "type": "module",

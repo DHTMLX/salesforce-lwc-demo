@@ -1,68 +1,136 @@
-# DHTMLX Widgets Demo for Salesforce LWC
+# DHTMLX Widgets (Kanban, Gantt, Scheduler) Demo for Salesforce LWC
 
 [![dhtmlx.com](https://img.shields.io/badge/made%20by-DHTMLX-blue)](https://dhtmlx.com/)
 [![License: GPL v2](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 
-This project contains a complete integration of DHTMLX Widgets for Lightning Web Components on Salesforce Platform, including:
+This project contains a complete integration of DHTMLX widgets for Lightning Web Components on the Salesforce Platform, including:
 
-- **📅 Scheduler** - Event calendar and timeline management
-- **📊 Kanban** - Task board with drag-and-drop functionality  
-- **📈 Gantt** - Project management with task dependencies
+- **[DHTMLX Kanban](https://dhtmlx.com/docs/products/dhtmlxKanban/)** for creating interactive Kanban boards for task and project management with drag-and-drop functionality.  
+- **[DHTMLX Gantt](https://dhtmlx.com/docs/products/dhtmlxGantt/)** for building powerful Gantt charts to visualize and manage projects with task dependencies.
+- **[DHTMLX Scheduler](https://dhtmlx.com/docs/products/dhtmlxScheduler/)** for creating event calendars to organize, display, and manage appointments or tasks in various views.
 
-The sample is implemented with the help of JavaScript libraries from [DHTMLX](https://dhtmlx.com/docs/products/).
+The sample is implemented with the help of [DHTMLX JavaScript components](https://dhtmlx.com/docs/products/).
+
+---
+<p align="center">
+🚀 <b>Try the Live Demo Online</b>
+</p>
+<p align="center">
+  You can test the components in a live Salesforce environment without any local setup.
+</p>
+<p align="center">
+  <a href="https://dhtmlx-dev-ed.develop.lightning.force.com/lightning/n/Kanban">
+  Click here to open the demo >>> </a>
+<p align="center">Login: <code>user</code></p>
+<p align="center">Password: <code>demo</code></p>
+
+---
+
+**TODO for Marketing: Please create a GIF and put here that shows a user clicking through the three main tabs: Gantt, Kanban, and Scheduler.**
 
 ## Prerequisites
 
-- Read Salesforce docs [Developer Hub](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm) in your organization
-- Apply for Salesforce Dev [trial](https://www.salesforce.com/form/developer-signup/?d=pb)
-- Install the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
+- Read Salesforce docs [Developer Hub](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_enable_devhub.htm) in your organization.
+- Apply for Salesforce Dev [trial](https://www.salesforce.com/form/developer-signup/?d=pb).
+- Install the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli).
+
+**Note:** After installing the CLI, it's recommended to restart your computer. This ensures VS Code and your terminal can find the new `sf` command.
 
 ##  Environment Setup
 
-1. **Create a Salesforce Developer Account**  
-    [Sign up here](https://www.salesforce.com/form/developer-signup/?d=pb)
+### 1. Create a Salesforce Developer Account 
 
-2. **Enable Dev Hub**  
-    - Go to **Setup** > **Dev Hub** and enable it.
+- [Sign up here](https://www.salesforce.com/form/developer-signup/?d=pb).
+ 
+### 2. Enable Dev Hub
 
-3. **Configure My Domain**  
-    - In **Quick Find**, search for `My Domain`.
-    - Copy your domain (e.g., `orgfarm-699063b98a-dev-ed.develop.my.salesforce.com`).
-    - Insert this value into the `sfdcLoginUrl` field of your `sfdx-project.json`.
-    - The URL should be in the format `https://{your_domain}`
+- Go to **Setup** > **Dev Hub** and enable it.
 
-4. **Authenticate with Salesforce CLI**  
-    ```sh
-    sfdx auth:web:login -d
-    ```
-    - Use any alias (e.g., `dhtmlx`).
-    - You can find your username in Salesforce under **Users**.
+### 3. Configure My Domain
 
-5. **Create a Scratch Org**  
-    ```sh
-    sfdx org create scratch -f config/project-scratch-def.json -a dhtmlx
-    ```
+- In **Quick Find**, search for `My Domain`.
+- Copy your domain (e.g., `https://orgfarm-699063b98a-dev-ed.develop.my.salesforce.com`).
+- Insert this value into the `sfdcLoginUrl` field of your `sfdx-project.json`.
 
-6. **Deploy Source Code**  
-    ```sh
-    sfdx force:source:deploy -p force-app --target-org dhtmlx
-    ```
-7. **Open Scratch Org**
-     ```sh
-    sfdx force:org:open -u dhtmlx
-    ```
+### 4. Authenticate with your Dev Hub
 
-8. **Set Trusted URLs**  
-    - If your code uses images, add their URLs to **Trusted URLs** in Salesforce settings.
-    - For demo images and attachments, this project uses [https://snippet.dhtmlx.com](https://snippet.dhtmlx.com) as an external image host.  
-      Make sure to add `https://snippet.dhtmlx.com` to the list of Trusted URLs in your Salesforce org.
+This command securely connects the Salesforce CLI to your main developer account (your Dev Hub).
 
-9. **Configure Profile Tab Visibility**
-    - Go to **Setup** → **Users** → **Profiles**
-    - Find and edit your user profile (e.g., "System Administrator")
-    - In **Custom Tab Settings** section, locate the DHTMLX components
-    - Set **Tab Settings** for Gantt, Kanban, and Scheduler tabs to **Default On** or **Visible**
-    - Save the profile changes
+```sh
+sf auth web login -d
+```
+
+A browser window will open. Log in to authorize the CLI. The `-d` flag sets this org as your default Dev Hub for creating scratch orgs.
+
+### 5. Create a Scratch Org and Assign Its Alias
+
+Now, we'll create a temporary "scratch" org for the demo. We should give it a nickname (an alias) so we can easily send commands to it.
+   
+```sh
+sf org create scratch -f config/project-scratch-def.json -a dhtmlx
+```
+    
+**Why the alias `dhtmlx`?** The alias you assign here (`-a dhtmlx`) is **required** for the following steps (`deploy` and `open`). The commands in this guide are already written to use the `dhtmlx` alias.
+
+**Recommendation:** Simply copy and paste the command as is. This ensures all subsequent steps will work without changes.
+
+### 6. Deploy Source Code
+  
+```sh
+sf project deploy start -d force-app --target-org dhtmlx
+```
+
+### 7. Populate Org with Demo Data
+
+Run the Apex script to create the initial records for the demo.
+
+```sh
+sf apex run --file scripts/apex/reset.apex -o dhtmlx
+```
+
+### 8. Open Scratch Org
+
+```sh
+sf org open -o dhtmlx
+```
+     
+### 9. Launch the Application
+
+- In the top-left corner, click the **App Launcher** (the icon with nine dots).
+- In the search bar, type **`DHTMLX`**.
+- Click on the **DHTMLX** application to open it.
+
+**Your application should now be running!** If you encounter any issues (like missing tabs), proceed to the verification steps below.
+
+## Verifying Configuration
+
+The deployment script should handle the following settings automatically. These steps are for verification or manual setup if something went wrong.
+
+### 1. Verify Profile Tab Visibility
+
+This process ensures your user has permissions to see the DHTMLX tabs.
+
+- **A. Find your Profile Name:**
+  - Go to **Setup** → **Users** → **Users**.
+  - Find your user (username will look like `test-....@example.com`).
+  - Check the **Profile** column. Most likely, it will be **System Administrator**.
+
+- **B. Edit the Profile:**
+  - Go to **Setup** → **Users** → **Profiles**.
+  - To quickly find the profile, use the alphabetical navigation at the top of the list and click on **'S'**.
+  - Find **System Administrator** and click **Edit**.
+
+- **C. Set Tab Visibility:**
+  - On the profile edit page, scroll down to the **Custom Tab Settings** section.
+  - Find the `Gantt`, `Kanban`, and `Scheduler` tabs.
+  - Ensure their visibility is set to **Default On**. If not, change it and click **Save**.
+
+### 2. Verify Trusted URLs for Demo Images
+This step is required only if you plan to add data with images to the components. For security reasons, Salesforce requires you to approve external image sources.
+
+- The image host for this demo is `https://snippet.dhtmlx.com`.
+- To add it, go to **Setup** → **Security** → **Trusted URLs**.
+- Click **New URL**, enter `https://snippet.dhtmlx.com` in the URL field, and save.
 
 ## Additional Setup for Kanban Attachments
 
@@ -71,7 +139,7 @@ To enable file uploads and attachments in the Kanban component, you need to crea
 ### Create Content Library
 
 1. **Go to Files  → Libraries → New Library**.  
-    Note: This option  not in the general settings. The navigation path should resemble:  
+    Note: This option is not in the general settings. The navigation path should resemble:  
     `https://<your-domain>.lightning.force.com/lightning/o/ContentDocument/home`
 2. **Create New Library:**
    - Name: `KanbanFiles` (recommended)
@@ -116,22 +184,15 @@ By default, the demo uses hardcoded user IDs that may not exist in your organiza
 
 3. **Redeploy Changes**
    ```sh
-   sfdx force:source:deploy -p force-app/main/default/classes/KanbanData.cls
+   sf project deploy start -d force-app/main/default/classes/KanbanData.cls
    ```
 
 **Note:** In large organizations, this may return many users and impact performance. Consider adding additional WHERE conditions to filter users as needed.
 
 ## Components Overview
 
-### 📅 Scheduler
-Event calendar with multiple view modes (day, week, month). Manages SchedulerEvent__c custom objects.
+### Kanban  
 
-**Features:**
-- Multiple calendar views
-- Event creation, editing, deletion
-- Integration with Salesforce data
-
-### 📊 Kanban  
 Task management board with columns and drag-and-drop functionality. Uses multiple custom objects (KanbanCard__c, KanbanColumn__c, etc.).
 
 **Features:**
@@ -141,13 +202,22 @@ Task management board with columns and drag-and-drop functionality. Uses multipl
 - File attachments support
 - Voting and priority management
 
-### 📈 Gantt
+### Gantt
 Project management with task dependencies and timeline visualization. Works with GanttTask__c and GanttLink__c objects.
 
 **Features:**
-- Task hierarchy and dependencies
 - Timeline visualization
+- Task hierarchy and dependencies
 - Progress tracking
+- Rich drag-and-drop behavior to manage tasks and dependencies
+
+### Scheduler
+Event calendar with multiple view modes (day, week, month). Manages SchedulerEvent__c custom objects.
+
+**Features:**
+- Multiple calendar views
+- Event creation, editing, deletion
+- Integration with Salesforce data
 
 ## How to configure / modify
 
@@ -155,9 +225,9 @@ Project management with task dependencies and timeline visualization. Works with
 
 Each component has its own Apex data controller:
 
-- **SchedulerData.cls** - Manages SchedulerEvent__c data
 - **KanbanData.cls** - Handles all Kanban-related objects  
 - **GanttData.cls** - Controls GanttTask__c and GanttLink__c data
+- **SchedulerData.cls** - Manages SchedulerEvent__c data
 
 Modify the SOQL queries in these classes to adjust data retrieval as needed.
 
@@ -165,9 +235,9 @@ Modify the SOQL queries in these classes to adjust data retrieval as needed.
 
 Lightning Web Components are located in `force-app/main/default/lwc/`:
 
-- **scheduler/** - Scheduler component implementation
 - **kanban/** - Kanban board component
 - **gantt/** - Gantt component
+- **scheduler/** - Scheduler component implementation
 
 Each component contains:
 - `*.js` - Main component logic and DHTMLX integration
@@ -180,17 +250,16 @@ Each component contains:
 
 The project uses trial versions of DHTMLX components in `force-app/main/default/staticresources/`. For production usage, replace these with licensed versions from your DHTMLX package.
 
+[Choose a proper license >](https://dhtmlx.com/docs/products/licenses.shtml)
+
 **Minimum compatible versions:**
-- DHTMLX Scheduler v7.2+
 - DHTMLX Kanban v1.7+  
 - DHTMLX Gantt v9.0+
+- DHTMLX Scheduler v7.2+
 
 ## Custom Objects
 
 The project includes several custom objects:
-
-**Scheduler:**
-- SchedulerEvent__c - Calendar events
 
 **Kanban:**  
 - KanbanCard__c - Task cards
@@ -206,6 +275,9 @@ The project includes several custom objects:
 - GanttTask__c - Project tasks  
 - GanttLink__c - Task dependencies
 
+**Scheduler:**
+- SchedulerEvent__c - Calendar events
+
 ## Profiles and Permissions
 
 The project includes a pre-configured profile:
@@ -214,70 +286,47 @@ The project includes a pre-configured profile:
 ## Related Resources
 
 **Documentation:**
-- [DHTMLX Scheduler](https://docs.dhtmlx.com/scheduler/)
 - [DHTMLX Kanban](https://docs.dhtmlx.com/kanban/) 
 - [DHTMLX Gantt](https://docs.dhtmlx.com/gantt/)
+- [DHTMLX Scheduler](https://docs.dhtmlx.com/scheduler/)
 
-**Product Pages:**
-- [DHTMLX Scheduler](https://dhtmlx.com/docs/products/dhtmlxScheduler/)
-- [DHTMLX Kanban](https://dhtmlx.com/docs/products/dhtmlxKanban/)
-- [DHTMLX Gantt](https://dhtmlx.com/docs/products/dhtmlxGantt/)
+**Tutorials**
+- [DHTMLX Gantt with Resource Management for Salesforce](https://dhtmlx.com/blog/announcing-new-dhtmlx-demo-gantt-resource-management-salesforce/)
+- [How to Create a Basic Gantt Chart with Salesforce Lightning](https://dhtmlx.com/blog/create-gantt-chart-salesforce-lightning/)
 
-**Salesforce Integration:**
+**Salesforce Integrations**
 - [DHTMLX Scheduler in Salesforce](https://dhtmlx.com/docs/products/demoApps/salesforce-scheduler/)
 - [DHTMLX Gantt in Salesforce](https://dhtmlx.com/docs/products/demoApps/salesforce-gantt-chart/)
 
-## Support Us
+## Troubleshooting
 
-Star our GitHub repo ⭐
+### 1. `sf` or `sfdx` command is not recognized
+**Problem:** The terminal returns an error like "command not found".
+**Solution:** This happens when your terminal session started before the CLI was fully installed into the system's PATH. Restart VS Code, your terminal, or **your entire computer** to fix this.
 
-Read us on [Medium](https://medium.com/@dhtmlx) 📰
+### 2. Components are empty (no demo data)
+**Problem:** The Gantt, Kanban, or Scheduler components load but show no tasks or events.
+**Solution:** This is expected. The demo project deploys functional components but does not include a script to populate them with data. You can start creating your own tasks and events to test the functionality.
 
-Follow us on [Twitter](https://twitter.com/dhtmlx) 🐦
-
-Like our page on [Facebook](https://www.facebook.com/dhtmlx/) 👍
-
-## TROUBLESHOOTING
-
-### 1. Kanban, Scheduler, or Gantt components are not visible
+### 3. Kanban, Scheduler, or Gantt components are not visible
 **Problem:** Components don't appear in Salesforce interface.
 **Solution:** 
-- Go to Profile settings in Salesforce Setup
-- Ensure that Custom Tabs for Gantt, Kanban, and Scheduler are set to "Visible"
+- Go to Profile settings in Salesforce Setup.
+- Ensure that Custom Tabs for Gantt, Kanban, and Scheduler are set to "Default On" as described in the setup guide.
 
-### 2. Images cannot be uploaded in Kanban
+### 4. Images cannot be uploaded in Kanban
 **Problem:** File upload functionality in Kanban doesn't work.
 **Solution:**
-- Ensure Content Library is created and properly configured
-- Check that the library name in `KanbanData.cls` (constant `LIB_NAME`) matches your actual library name
-- Verify that users have proper permissions to upload content to the library
+- Ensure Content Library is created and properly configured.
+- Check that the library name in `KanbanData.cls` (constant `LIB_NAME`) matches your actual library name.
+- Verify that users have proper permissions to upload content to the library.
 
-### 4. No users appear in Kanban user assignments
+### 5. No users appear in Kanban user assignments
 **Problem:** The Kanban card user dropdown is empty or only shows a few users.
 **Solution:**
 - The demo uses hardcoded user IDs that may not exist in your Salesforce org.
-- Open `KanbanData.cls` and locate the `getUsers()` method (around lines 109–116).
-- Disable the demo user filtering by commenting out the code that restricts users to specific IDs:
-
-    Comment out:
-    ```apex
-    // Set<Id> allowed = new Set<Id>{
-    //     '005gL000004asAsQAI', // 'Steve Smith'
-    //     '005gL000004ayJVQAY', // 'Angela Allen'
-    //     '005gL000004ayjJQAQ', // 'Aron Long'
-    //     '005gL000004ayplQAA', // 'Angela Long'
-    //     '005gL000004qjErQAI' // DHTMLX USER
-    // };
-
-    // List<User> us = [
-    //     SELECT Id, Name, SmallPhotoUrl
-    //     FROM   User
-    //     WHERE  Id IN :allowed
-    //     AND    IsActive = true
-    //     ORDER  BY Name
-    // ];
-    ```
-
+- Open `KanbanData.cls` and locate the `getUsers()` method (around lines 109-116).
+- Disable the demo user filtering by commenting out the code that restricts users to specific IDs.
 - Instead, uncomment the code that retrieves all active users:
     ```apex
     List<User> us = [
@@ -289,3 +338,10 @@ Like our page on [Facebook](https://www.facebook.com/dhtmlx/) 👍
     ```
 - This will display all active users in your organization in the Kanban user assignment dropdown.
 - **Warning:** In large organizations, this may list many users.
+
+## Join our online community
+
+- Star our GitHub repo :star:
+- Read us on [Medium](https://dhtmlx.medium.com) :newspaper:
+- Follow us on [X](https://x.com/dhtmlx) :bird:
+- Check our news and updates on [Facebook](https://www.facebook.com/dhtmlx/) :feet:

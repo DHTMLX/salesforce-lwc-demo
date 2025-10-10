@@ -8,7 +8,7 @@ This project contains a complete integration of DHTMLX components for Lightning 
 - **[DHTMLX Gantt](https://dhtmlx.com/docs/products/dhtmlxGantt/)** for building powerful Gantt charts to visualize and manage projects with task dependencies.
 - **[DHTMLX Scheduler](https://dhtmlx.com/docs/products/dhtmlxScheduler/)** for creating event calendars to organize, display, and manage appointments or tasks in various views.
 
-
+![dhtmlx-components-salesforce-demo](assets/dhtmlx-components-salesforce-demo.gif)
 
 ---
 <p align="center">

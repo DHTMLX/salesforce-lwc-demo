@@ -1,15 +1,14 @@
-# DHTMLX Widgets (Kanban, Gantt, Scheduler) Demo for Salesforce LWC
+# DHTMLX Components (Kanban, Gantt, Scheduler) Demo for Salesforce LWC
 
 [![dhtmlx.com](https://img.shields.io/badge/made%20by-DHTMLX-blue)](https://dhtmlx.com/)
-[![License: GPL v2](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 
-This project contains a complete integration of DHTMLX widgets for Lightning Web Components on the Salesforce Platform, including:
+This project contains a complete integration of DHTMLX components for Lightning Web Components on the Salesforce Platform, including:
 
 - **[DHTMLX Kanban](https://dhtmlx.com/docs/products/dhtmlxKanban/)** for creating interactive Kanban boards for task and project management with drag-and-drop functionality.  
 - **[DHTMLX Gantt](https://dhtmlx.com/docs/products/dhtmlxGantt/)** for building powerful Gantt charts to visualize and manage projects with task dependencies.
 - **[DHTMLX Scheduler](https://dhtmlx.com/docs/products/dhtmlxScheduler/)** for creating event calendars to organize, display, and manage appointments or tasks in various views.
 
-The sample is implemented with the help of [DHTMLX JavaScript components](https://dhtmlx.com/docs/products/).
+![dhtmlx-components-salesforce-demo](assets/dhtmlx-components-salesforce-demo.gif)
 
 ---
 <p align="center">
@@ -25,8 +24,6 @@ The sample is implemented with the help of [DHTMLX JavaScript components](https:
 <p align="center">Password: <code>demo</code></p>
 
 ---
-
-**TODO for Marketing: Please create a GIF and put here that shows a user clicking through the three main tabs: Gantt, Kanban, and Scheduler.**
 
 ## Prerequisites
 
@@ -209,7 +206,7 @@ Project management with task dependencies and timeline visualization. Works with
 - Timeline visualization
 - Task hierarchy and dependencies
 - Progress tracking
-- Rich drag-and-drop behavior to manage tasks and dependencies
+- Intuitive drag-and-drop behavior to manage tasks and dependencies
 
 ### Scheduler
 Event calendar with multiple view modes (day, week, month). Manages SchedulerEvent__c custom objects.
@@ -285,7 +282,7 @@ The project includes a pre-configured profile:
 
 ## Related Resources
 
-**Documentation:**
+**Documentation**
 - [DHTMLX Kanban](https://docs.dhtmlx.com/kanban/) 
 - [DHTMLX Gantt](https://docs.dhtmlx.com/gantt/)
 - [DHTMLX Scheduler](https://docs.dhtmlx.com/scheduler/)
@@ -304,17 +301,13 @@ The project includes a pre-configured profile:
 **Problem:** The terminal returns an error like "command not found".
 **Solution:** This happens when your terminal session started before the CLI was fully installed into the system's PATH. Restart VS Code, your terminal, or **your entire computer** to fix this.
 
-### 2. Components are empty (no demo data)
-**Problem:** The Gantt, Kanban, or Scheduler components load but show no tasks or events.
-**Solution:** This is expected. The demo project deploys functional components but does not include a script to populate them with data. You can start creating your own tasks and events to test the functionality.
-
-### 3. Kanban, Scheduler, or Gantt components are not visible
+### 2. Kanban, Scheduler, or Gantt components are not visible
 **Problem:** Components don't appear in Salesforce interface.
 **Solution:** 
 - Go to Profile settings in Salesforce Setup.
 - Ensure that Custom Tabs for Gantt, Kanban, and Scheduler are set to "Default On" as described in the setup guide.
 
-### 4. Images cannot be uploaded in Kanban
+### 3. Images cannot be uploaded in Kanban
 **Problem:** File upload functionality in Kanban doesn't work.
 **Solution:**
 - Ensure Content Library is created and properly configured.
@@ -339,7 +332,7 @@ The project includes a pre-configured profile:
 - This will display all active users in your organization in the Kanban user assignment dropdown.
 - **Warning:** In large organizations, this may list many users.
 
-## Join our online community
+## Join Our Online Community
 
 - Star our GitHub repo :star:
 - Read us on [Medium](https://dhtmlx.medium.com) :newspaper:

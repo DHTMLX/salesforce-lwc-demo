@@ -314,7 +314,7 @@ The project includes a pre-configured profile:
 - Check that the library name in `KanbanData.cls` (constant `LIB_NAME`) matches your actual library name.
 - Verify that users have proper permissions to upload content to the library.
 
-### 5. No users appear in Kanban user assignments
+### 4. No users appear in Kanban user assignments
 **Problem:** The Kanban card user dropdown is empty or only shows a few users.
 **Solution:**
 - The demo uses hardcoded user IDs that may not exist in your Salesforce org.

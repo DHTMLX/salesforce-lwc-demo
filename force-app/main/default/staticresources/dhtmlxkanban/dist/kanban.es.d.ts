@@ -845,6 +845,7 @@ interface IKanbanConfig extends IKanbanProps {
     locale?: Record<string, any>;
     theme?: TThemeConfig;
 }
+declare function enableSalesForce(): void;
 declare class Kanban {
     api: IApi;
     export: ExportManager;
@@ -902,11 +903,7 @@ declare class Kanban {
     private _reset;
     private _storeConfig;
 }
-declare function template(template: any): {
-    (template: string | {
-        (...x: any[]): string;
-    }): void;
-};
+declare function template(template: string | ((...args: any) => string)): any;
 
 interface IEditorProps {
     api: IApi;
@@ -1109,6 +1106,5 @@ declare const locales: {
     pt: any;
     ru: any;
 };
-declare function enableSalesForce(): void;
 
 export { Editor, Kanban, RemoteEvents, RestDataProvider, Toolbar, defaultCardShape, defaultEditorConfig, defaultEditorShape, enableSalesForce, getDefaultCardMenuItems, getDefaultColumnMenuItems, getDefaultRowMenuItems, kanbanUpdates, locales, locateID, salesForceEnv, tempID, template };
